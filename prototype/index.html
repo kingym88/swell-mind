@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SwellMind - Surf Recommendation App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="phone-frame">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons">
+          <span>📶</span>
+          <span>🔋</span>
+        </div>
+      </div>
+
+      <!-- Screen: Home (Forecast Dashboard) -->
+      <div class="screen active" id="screen-home">
+        <header class="screen-header home-header">
+          <div class="greeting">
+            <h1>Hey King 🏄</h1>
+            <p class="tagline">Great conditions ahead!</p>
+          </div>
+          <div class="header-icons">
+            <button class="icon-btn">🔔</button>
+            <button class="icon-btn">⚙️</button>
+          </div>
+        </header>
+
+        <main class="screen-content">
+          <!-- Hero Card -->
+          <div class="hero-card">
+            <div class="hero-header">
+              <span class="hero-label">Today's Best Window</span>
+              <div class="score-badge large">
+                <span class="score-value">92</span>
+                <span class="score-max">/100</span>
+              </div>
+            </div>
+            <div class="hero-time">
+              <span class="time-icon">⏰</span>
+              <span>Tomorrow, 6:00 AM - 9:00 AM</span>
+            </div>
+            <div class="conditions-grid">
+              <div class="condition">
+                <span class="condition-icon">🌊</span>
+                <span class="condition-value">1.5m @ 11s</span>
+                <span class="condition-label">WNW Swell</span>
+              </div>
+              <div class="condition">
+                <span class="condition-icon">💨</span>
+                <span class="condition-value">Offshore</span>
+                <span class="condition-label">8 km/h</span>
+              </div>
+              <div class="condition">
+                <span class="condition-icon">🌅</span>
+                <span class="condition-value">Rising</span>
+                <span class="condition-label">Mid tide</span>
+              </div>
+            </div>
+            <div class="hero-explanation">
+              <span class="explanation-icon">✨</span>
+              <p>
+                Similar to your best 9/10 sessions - morning glass, clean
+                offshore winds!
+              </p>
+            </div>
+            <div class="hero-actions">
+              <button class="btn btn-primary">Set Reminder</button>
+              <button class="btn btn-secondary" onclick="openLogModal()">
+                Log Session
+              </button>
+            </div>
+          </div>
+
+          <!-- Spot Selector -->
+          <div class="spot-selector">
+            <div class="spot-pill active"><span>🏖️</span> Ericeira</div>
+            <div class="spot-pill"><span>🌊</span> Peniche</div>
+            <div class="spot-pill"><span>🏄</span> Guincho</div>
+            <div class="spot-pill"><span>⛱️</span> Cascais</div>
+          </div>
+
+          <!-- Quick Stats -->
+          <section class="section">
+            <h2 class="section-title">Your Stats</h2>
+            <div class="stats-grid">
+              <div class="stat-card dark">
+                <span class="stat-icon">📊</span>
+                <span class="stat-value">12</span>
+                <span class="stat-label">Sessions This Month</span>
+              </div>
+              <div class="stat-card dark">
+                <span class="stat-icon">⭐</span>
+                <span class="stat-value">7.8</span>
+                <span class="stat-label">Avg Rating</span>
+              </div>
+              <div class="stat-card dark">
+                <span class="stat-icon">📍</span>
+                <span class="stat-value">Ericeira</span>
+                <span class="stat-label">Best Spot</span>
+              </div>
+              <div class="stat-card dark">
+                <span class="stat-icon">🤖</span>
+                <span class="stat-value">High</span>
+                <span class="stat-label">Model Confidence</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Upcoming Windows -->
+          <section class="section">
+            <h2 class="section-title">Next 7 Days</h2>
+            <div class="windows-scroll">
+              <div class="window-card recommended">
+                <div class="window-score">85</div>
+                <div class="window-time">Wed 8AM</div>
+                <div class="window-conditions">1.3m, Offshore</div>
+                <span class="badge recommended-badge">🏄 Recommended</span>
+              </div>
+              <div class="window-card recommended">
+                <div class="window-score">78</div>
+                <div class="window-time">Thu 6AM</div>
+                <div class="window-conditions">1.4m, Cross</div>
+                <span class="badge recommended-badge">🏄 Recommended</span>
+              </div>
+              <div class="window-card">
+                <div class="window-score moderate">62</div>
+                <div class="window-time">Fri 11AM</div>
+                <div class="window-conditions">1.1m, Onshore</div>
+              </div>
+              <div class="window-card">
+                <div class="window-score poor">45</div>
+                <div class="window-time">Sat 2PM</div>
+                <div class="window-conditions">0.8m, Onshore</div>
+              </div>
+              <div class="window-card recommended">
+                <div class="window-score">88</div>
+                <div class="window-time">Sun 7AM</div>
+                <div class="window-conditions">1.6m, Offshore</div>
+                <span class="badge recommended-badge">🏄 Recommended</span>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+
+      <!-- Screen: Sessions -->
+      <div class="screen" id="screen-sessions">
+        <header class="screen-header">
+          <button class="back-btn" onclick="navigateTo('home')">←</button>
+          <h1>My Sessions</h1>
+          <button class="icon-btn">🔍</button>
+        </header>
+
+        <div class="tabs">
+          <button class="tab active" data-tab="recent">Recent Sessions</button>
+          <button class="tab" data-tab="insights">Insights</button>
+        </div>
+
+        <main class="screen-content">
+          <!-- Recent Sessions Tab -->
+          <div class="tab-content active" id="tab-recent">
+            <div class="session-card">
+              <div class="session-icon">🏖️</div>
+              <div class="session-info">
+                <div class="session-header">
+                  <h3>Ericeira</h3>
+                  <div class="rating-badge">⭐ 9</div>
+                </div>
+                <p class="session-date">2 days ago</p>
+                <div class="session-progress">
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: 90%"></div>
+                  </div>
+                  <span>90%</span>
+                </div>
+                <p class="session-conditions">1.5m @ 12s, Offshore</p>
+                <p class="session-notes">"Perfect morning glass!"</p>
+              </div>
+            </div>
+
+            <div class="session-card">
+              <div class="session-icon">🌊</div>
+              <div class="session-info">
+                <div class="session-header">
+                  <h3>Peniche</h3>
+                  <div class="rating-badge">⭐ 8</div>
+                </div>
+                <p class="session-date">5 days ago</p>
+                <div class="session-progress">
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: 80%"></div>
+                  </div>
+                  <span>80%</span>
+                </div>
+                <p class="session-conditions">1.8m @ 10s, Cross-offshore</p>
+                <p class="session-notes">"Great waves, bit crowded"</p>
+              </div>
+            </div>
+
+            <div class="session-card">
+              <div class="session-icon">🏄</div>
+              <div class="session-info">
+                <div class="session-header">
+                  <h3>Guincho</h3>
+                  <div class="rating-badge warning">⭐ 6</div>
+                </div>
+                <p class="session-date">1 week ago</p>
+                <div class="session-progress">
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: 60%"></div>
+                  </div>
+                  <span>60%</span>
+                </div>
+                <p class="session-conditions">1.1m @ 8s, Onshore</p>
+                <p class="session-notes">"Too windy, short session"</p>
+              </div>
+            </div>
+
+            <div class="session-card">
+              <div class="session-icon">⛱️</div>
+              <div class="session-info">
+                <div class="session-header">
+                  <h3>Carcavelos</h3>
+                  <div class="rating-badge">⭐ 7</div>
+                </div>
+                <p class="session-date">2 weeks ago</p>
+                <div class="session-progress">
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: 70%"></div>
+                  </div>
+                  <span>70%</span>
+                </div>
+                <p class="session-conditions">1.2m @ 9s, Light offshore</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Insights Tab -->
+          <div class="tab-content" id="tab-insights">
+            <div class="insights-card">
+              <h3>You Surf Best When...</h3>
+              <div class="insight-grid">
+                <div class="insight-item">
+                  <span class="insight-icon">🌊</span>
+                  <span class="insight-label">Wave Height</span>
+                  <span class="insight-value">1.2m - 1.8m</span>
+                </div>
+                <div class="insight-item">
+                  <span class="insight-icon">⏱️</span>
+                  <span class="insight-label">Period</span>
+                  <span class="insight-value">10-12 seconds</span>
+                </div>
+                <div class="insight-item">
+                  <span class="insight-icon">💨</span>
+                  <span class="insight-label">Wind</span>
+                  <span class="insight-value">Offshore / Light cross</span>
+                </div>
+                <div class="insight-item">
+                  <span class="insight-icon">🌅</span>
+                  <span class="insight-label">Time</span>
+                  <span class="insight-value">Morning (6am - 10am)</span>
+                </div>
+                <div class="insight-item">
+                  <span class="insight-icon">👥</span>
+                  <span class="insight-label">Crowd</span>
+                  <span class="insight-value">Low to medium</span>
+                </div>
+              </div>
+              <p class="insight-footer">Based on 15 logged sessions</p>
+            </div>
+
+            <div class="chart-section">
+              <h3>Rating vs Wave Height</h3>
+              <div class="bar-chart">
+                <div class="bar-item">
+                  <div class="bar" style="height: 40%"></div>
+                  <span class="bar-label">0.5-1m</span>
+                </div>
+                <div class="bar-item">
+                  <div class="bar" style="height: 90%"></div>
+                  <span class="bar-label">1-1.5m</span>
+                </div>
+                <div class="bar-item">
+                  <div class="bar" style="height: 85%"></div>
+                  <span class="bar-label">1.5-2m</span>
+                </div>
+                <div class="bar-item">
+                  <div class="bar" style="height: 60%"></div>
+                  <span class="bar-label">2-2.5m</span>
+                </div>
+                <div class="bar-item">
+                  <div class="bar" style="height: 30%"></div>
+                  <span class="bar-label">2.5m+</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="chart-section">
+              <h3>Rating by Wind Orientation</h3>
+              <div class="horizontal-bars">
+                <div class="h-bar-item">
+                  <span class="h-bar-label">Offshore</span>
+                  <div class="h-bar-container">
+                    <div class="h-bar" style="width: 95%"></div>
+                  </div>
+                  <span class="h-bar-value">8.5</span>
+                </div>
+                <div class="h-bar-item">
+                  <span class="h-bar-label">Cross</span>
+                  <div class="h-bar-container">
+                    <div class="h-bar" style="width: 70%"></div>
+                  </div>
+                  <span class="h-bar-value">7.0</span>
+                </div>
+                <div class="h-bar-item">
+                  <span class="h-bar-label">Onshore</span>
+                  <div class="h-bar-container">
+                    <div class="h-bar warning" style="width: 45%"></div>
+                  </div>
+                  <span class="h-bar-value">4.5</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+
+      <!-- Screen: Spots Map -->
+      <div class="screen" id="screen-spots">
+        <header class="screen-header map-header">
+          <button class="back-btn" onclick="navigateTo('home')">←</button>
+          <div class="search-bar">
+            <span>🔍</span>
+            <input type="text" placeholder="Search spots..." />
+          </div>
+          <button class="icon-btn">⚙️</button>
+        </header>
+
+        <main class="screen-content map-content">
+          <div class="map-container">
+            <div class="map-placeholder">
+              <div class="map-pin" style="top: 20%; left: 30%">
+                <div class="pin-marker recommended">🌊</div>
+                <span class="pin-label">Ericeira</span>
+              </div>
+              <div class="map-pin" style="top: 35%; left: 15%">
+                <div class="pin-marker recommended">🌊</div>
+                <span class="pin-label">Peniche</span>
+              </div>
+              <div class="map-pin" style="top: 55%; left: 40%">
+                <div class="pin-marker">🌊</div>
+                <span class="pin-label">Guincho</span>
+              </div>
+              <div class="map-pin" style="top: 70%; left: 55%">
+                <div class="pin-marker">🌊</div>
+                <span class="pin-label">Cascais</span>
+              </div>
+              <div class="map-pin" style="top: 80%; left: 65%">
+                <div class="pin-marker">🌊</div>
+                <span class="pin-label">Carcavelos</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bottom-sheet">
+            <div class="sheet-handle"></div>
+            <h3>⭐ Your Spots</h3>
+            <div class="spot-list">
+              <div class="spot-item">
+                <div class="spot-icon">🏖️</div>
+                <div class="spot-info">
+                  <h4>Ericeira</h4>
+                  <p>15 km away • Score: 92</p>
+                </div>
+                <div class="spot-score high">92</div>
+              </div>
+              <div class="spot-item">
+                <div class="spot-icon">🌊</div>
+                <div class="spot-info">
+                  <h4>Peniche</h4>
+                  <p>45 km away • Score: 85</p>
+                </div>
+                <div class="spot-score high">85</div>
+              </div>
+              <div class="spot-item">
+                <div class="spot-icon">🏄</div>
+                <div class="spot-info">
+                  <h4>Guincho</h4>
+                  <p>8 km away • Score: 62</p>
+                </div>
+                <div class="spot-score moderate">62</div>
+              </div>
+            </div>
+            <button class="btn btn-primary full-width">Discover Nearby</button>
+          </div>
+        </main>
+      </div>
+
+      <!-- Screen: Settings -->
+      <div class="screen" id="screen-settings">
+        <header class="screen-header">
+          <button class="back-btn" onclick="navigateTo('home')">←</button>
+          <h1>Settings</h1>
+          <div></div>
+        </header>
+
+        <main class="screen-content">
+          <div class="settings-section">
+            <h3 class="settings-title">Spots</h3>
+            <div class="settings-item">
+              <span>📍 Manage Favorite Spots</span>
+              <span class="chevron">›</span>
+            </div>
+            <div class="settings-item">
+              <span>➕ Add Custom Spot</span>
+              <span class="chevron">›</span>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3 class="settings-title">Units</h3>
+            <div class="settings-item">
+              <span>🌊 Wave Height</span>
+              <span class="settings-value">Meters</span>
+            </div>
+            <div class="settings-item">
+              <span>💨 Wind Speed</span>
+              <span class="settings-value">km/h</span>
+            </div>
+            <div class="settings-item">
+              <span>🌡️ Temperature</span>
+              <span class="settings-value">Celsius</span>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3 class="settings-title">Notifications</h3>
+            <div class="settings-item">
+              <span>🔔 High Score Alerts</span>
+              <label class="toggle">
+                <input type="checkbox" checked />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="settings-item">
+              <span>📬 Daily Forecast</span>
+              <label class="toggle">
+                <input type="checkbox" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3 class="settings-title">Preferences</h3>
+            <div class="settings-item">
+              <span>🌊 Ideal Wave Size</span>
+              <span class="settings-value">1-2m</span>
+            </div>
+            <div class="settings-item">
+              <span>👥 Crowd Tolerance</span>
+              <span class="settings-value">Low</span>
+            </div>
+            <div class="settings-item">
+              <span>🌅 Preferred Times</span>
+              <span class="settings-value">Morning</span>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3 class="settings-title">Account</h3>
+            <div class="settings-item">
+              <span>📧 Email</span>
+              <span class="settings-value">king@email.com</span>
+            </div>
+            <div class="settings-item">
+              <span>🔒 Change Password</span>
+              <span class="chevron">›</span>
+            </div>
+            <div class="settings-item">
+              <span>📤 Export My Data</span>
+              <span class="chevron">›</span>
+            </div>
+            <div class="settings-item danger">
+              <span>🗑️ Delete Account</span>
+              <span class="chevron">›</span>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3 class="settings-title">About</h3>
+            <div class="settings-item">
+              <span>ℹ️ Version</span>
+              <span class="settings-value">1.0.0</span>
+            </div>
+            <div class="settings-item">
+              <span>📜 Privacy Policy</span>
+              <span class="chevron">›</span>
+            </div>
+            <div class="settings-item">
+              <span>⭐ Rate on Play Store</span>
+              <span class="chevron">›</span>
+            </div>
+          </div>
+        </main>
+      </div>
+
+      <!-- Log Session Modal -->
+      <div class="modal" id="log-modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Log Session</h2>
+            <button class="close-btn" onclick="closeLogModal()">✕</button>
+          </div>
+
+          <form class="log-form">
+            <div class="form-group">
+              <label>Spot</label>
+              <select>
+                <option>Ericeira</option>
+                <option>Peniche</option>
+                <option>Guincho</option>
+                <option>Cascais</option>
+                <option>Carcavelos</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>When did you surf?</label>
+              <div class="time-toggle">
+                <button type="button" class="toggle-btn active">
+                  Just now
+                </button>
+                <button type="button" class="toggle-btn">
+                  Earlier this week
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Overall Rating</label>
+              <div class="rating-slider">
+                <input
+                  type="range"
+                  min="1"
+                  max="10"
+                  value="7"
+                  id="rating-slider"
+                />
+                <div class="rating-labels">
+                  <span>😞</span>
+                  <span class="rating-value" id="rating-display">7</span>
+                  <span>🤩</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>How was the wind?</label>
+              <div class="option-group">
+                <button type="button" class="option-btn">Too Onshore</button>
+                <button type="button" class="option-btn active">
+                  Just Right
+                </button>
+                <button type="button" class="option-btn">Too Weak</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Wave Size (1 = Too Small, 10 = Too Big)</label>
+              <input type="range" min="1" max="10" value="5" />
+            </div>
+
+            <div class="form-group">
+              <label>Crowd Level</label>
+              <input type="range" min="1" max="10" value="3" />
+            </div>
+
+            <div class="form-group">
+              <label>Notes (optional)</label>
+              <textarea
+                placeholder="Add notes about this session..."
+              ></textarea>
+            </div>
+
+            <div class="linked-forecast">
+              <span>📊 Linked forecast:</span>
+              <span>1.5m @ 11s, Offshore</span>
+            </div>
+
+            <div class="form-actions">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="closeLogModal()"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                onclick="submitSession(event)"
+              >
+                Log Session
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Bottom Navigation -->
+      <nav class="bottom-nav">
+        <button class="nav-item active" data-screen="home">
+          <span class="nav-icon">🏠</span>
+          <span class="nav-label">Home</span>
+        </button>
+        <button class="nav-item" data-screen="sessions">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">Sessions</span>
+        </button>
+        <button class="nav-item fab" onclick="openLogModal()">
+          <span class="nav-icon">➕</span>
+        </button>
+        <button class="nav-item" data-screen="spots">
+          <span class="nav-icon">📍</span>
+          <span class="nav-label">Spots</span>
+        </button>
+        <button class="nav-item" data-screen="settings">
+          <span class="nav-icon">⚙️</span>
+          <span class="nav-label">Settings</span>
+        </button>
+      </nav>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
