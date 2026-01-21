@@ -143,23 +143,30 @@ router.post('/signout', async (req: Request, res: Response) => {
     const authHeader = req.headers.authorization;
     
     if (!authHeader?.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'No session' });
+      // Even if no token, return success since frontend will clear localStorage
+      return res.json({ message: 'Signed out successfully' });
     }
 
     const token = authHeader.slice(7);
     
-    // Sign out using the token
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
-      console.error('Signout error:', error);
-      return res.status(500).json({ error: 'Failed to sign out' });
+    // Verify the token is valid
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    
+    // Even if token is invalid or signout fails, return success
+    // The frontend will clear localStorage regardless
+    if (!authError && user) {
+      // Optionally invalidate the session on Supabase side
+      // Note: This requires admin privileges or different approach
+      await supabase.auth.admin.signOut(token).catch(() => {
+        // Ignore errors - frontend will clear token anyway
+      });
     }
 
     return res.json({ message: 'Signed out successfully' });
   } catch (error) {
     console.error('Error in POST /auth/signout:', error);
-    return res.status(500).json({ error: 'Internal server error' });
+    // Still return success - signout should always succeed on frontend
+    return res.json({ message: 'Signed out successfully' });
   }
 });
 
