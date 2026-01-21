@@ -113,7 +113,7 @@ export default function HomePage() {
 
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto px-4 pb-4">
-          {/* Spot Selector */}
+          {/* Spot Selector - MOVED ABOVE HERO CARD */}
           <div className="flex gap-2 overflow-x-auto pb-2 mb-4 -mx-4 px-4">
             {spots.slice(0, 5).map((spot) => (
               <button
@@ -135,7 +135,7 @@ export default function HomePage() {
                   <p className="text-xs uppercase tracking-wide opacity-90 mb-1">
                     TODAY'S BEST WINDOW
                   </p>
-                  <p className="text-xl font-bold">
+                  <p className="hero-time-text">
                     🕐 {format(new Date(bestWindow.timestamp_utc), 'EEEE, h:mm a')} - {format(new Date(new Date(bestWindow.timestamp_utc).getTime() + 3 * 60 * 60 * 1000), 'h:mm a')}
                   </p>
                 </div>
@@ -166,7 +166,7 @@ export default function HomePage() {
               {bestWindow.explanation && (
                 <div className="flex items-start gap-2 p-3 bg-white/15 rounded-lg mb-3">
                   <span className="text-base">✨</span>
-                  <p className="text-sm leading-relaxed">{bestWindow.explanation}</p>
+                  <p className="hero-explanation-text">{bestWindow.explanation}</p>
                 </div>
               )}
 
