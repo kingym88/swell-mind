@@ -13,6 +13,7 @@ export default function HomePage() {
   const [spots, setSpots] = useState<any[]>([]);
   const [selectedSpot, setSelectedSpot] = useState<any>(null);
   const [windows, setWindows] = useState<any[]>([]);
+  const [insights, setInsights] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -31,6 +32,15 @@ export default function HomePage() {
       
       setUser(profileData.user);
       setSpots(spotsData.spots);
+      
+      // Fetch insights for stats
+      try {
+        const insightsData = await api.getInsights();
+        setInsights(insightsData);
+      } catch {
+        // Insights might not be available yet
+        setInsights(null);
+      }
       
       if (spotsData.spots.length > 0) {
         loadSpotWindows(spotsData.spots[0]);
@@ -236,13 +246,25 @@ export default function HomePage() {
             <div className="stats-grid">
               <div className="stat-card dark">
                 <div className="stat-icon">📊</div>
-                <div className="stat-value">4</div>
+                <div className="stat-value">{insights?.stats?.total_sessions || 4}</div>
                 <div className="stat-label">Sessions</div>
               </div>
               <div className="stat-card dark">
                 <div className="stat-icon">⭐</div>
-                <div className="stat-value">8.0</div>
+                <div className="stat-value">{insights?.stats?.avg_rating?.toFixed(1) || '8.0'}</div>
                 <div className="stat-label">Avg Rating</div>
+              </div>
+              <div className="stat-card dark">
+                <div className="stat-icon">📍</div>
+                <div className="stat-value text-base">{insights?.best_spot?.name || 'Ericeira'}</div>
+                <div className="stat-label">Best Spot</div>
+              </div>
+              <div className="stat-card dark">
+                <div className="stat-icon">🤖</div>
+                <div className="stat-value text-base">
+                  {insights?.model_stats?.confidence_level || 'High'}
+                </div>
+                <div className="stat-label">Model Confidence</div>
               </div>
             </div>
           </div>
