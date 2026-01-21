@@ -63,8 +63,54 @@ export default function HomePage() {
     return 'text-gray-400';
   };
 
-  const bestWindow = windows.find(w => w.score && w.score >= 50) || windows[0];
-  const upcomingWindows = windows.slice(1, 7);
+  // Filter out night windows (only show 6AM to 9PM)
+  const isDaytimeWindow = (timestamp: string) => {
+    const date = new Date(timestamp);
+    const hour = date.getHours();
+    return hour >= 6 && hour < 21; // 6AM to 8:59PM
+  };
+
+  // Format time without :00 for whole hours (e.g., "9AM" instead of "9:00AM")
+  const formatCompactTime = (date: Date) => {
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const hour12 = hours % 12 || 12;
+    
+    if (minutes === 0) {
+      return `${hour12}${period}`;
+    }
+    return `${hour12}:${minutes.toString().padStart(2, '0')}${period}`;
+  };
+
+  // Format date as "Mon, 27/01, 8AM-11AM"
+  const formatCompactDateTime = (startDate: Date, endDate: Date) => {
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const day = dayNames[startDate.getDay()];
+    const date = startDate.getDate().toString().padStart(2, '0');
+    const month = (startDate.getMonth() + 1).toString().padStart(2, '0');
+    const startTime = formatCompactTime(startDate);
+    const endTime = formatCompactTime(endDate);
+    
+    return `${day}, ${date}/${month}, ${startTime}-${endTime}`;
+  };
+
+  // Format single date/time as "Mon, 27/01, 8AM"
+  const formatCompactSingleDateTime = (date: Date) => {
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const day = dayNames[date.getDay()];
+    const dateNum = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const time = formatCompactTime(date);
+    
+    return `${day}, ${dateNum}/${month}, ${time}`;
+  };
+
+  // Filter windows to only daytime (6AM-9PM)
+  const daytimeWindows = windows.filter(w => isDaytimeWindow(w.timestamp_utc));
+  
+  const bestWindow = daytimeWindows.find(w => w.score && w.score >= 50) || daytimeWindows[0];
+  const upcomingWindows = daytimeWindows.slice(1, 7);
 
   if (loading && !user) {
     return (
@@ -119,10 +165,13 @@ export default function HomePage() {
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <p className="text-xs uppercase tracking-wide opacity-90 mb-1">
-                    TODAY'S BEST WINDOW
+                    NEXT BEST WINDOW
                   </p>
                   <p className="text-base font-semibold">
-                    🕐 {format(new Date(bestWindow.timestamp_utc), 'EEEE, h:mm a')} - {format(new Date(new Date(bestWindow.timestamp_utc).getTime() + 3 * 60 * 60 * 1000), 'h:mm a')}
+                    🕐 {formatCompactDateTime(
+                      new Date(bestWindow.timestamp_utc),
+                      new Date(new Date(bestWindow.timestamp_utc).getTime() + 3 * 60 * 60 * 1000)
+                    )}
                   </p>
                 </div>
                 <div className="score-badge large">
@@ -212,8 +261,8 @@ export default function HomePage() {
                   <div className={`text-3xl font-bold mb-1 ${getScoreClass(window.score)}`}>
                     {window.score || '--'}
                   </div>
-                  <div className="font-semibold text-gray-900">
-                    {format(new Date(window.timestamp_utc), 'EEE ha')}
+                  <div className="font-semibold text-gray-900 text-sm">
+                    {formatCompactSingleDateTime(new Date(window.timestamp_utc))}
                   </div>
                   <div className="text-xs text-gray-600">
                     {window.wave_height?.toFixed(1)}m @ {window.wave_period?.toFixed(0)}s
