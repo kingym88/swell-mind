@@ -5,9 +5,11 @@ import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
 import { format } from 'date-fns';
 import Link from 'next/link';
+import { usePreferences } from '@/contexts/PreferencesContext';
 
 export default function SessionsPage() {
   const router = useRouter();
+  const { convertWaveHeight, getWaveUnitLabel } = usePreferences();
   const [sessions, setSessions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'recent' | 'insights'>('recent');
@@ -129,7 +131,7 @@ export default function SessionsPage() {
                       {/* Conditions */}
                       {session.forecast && (
                         <div className="text-sm">
-                          🌊 {session.forecast.wave_height?.toFixed(1)}m @ {session.forecast.wave_period?.toFixed(0)}s
+                          🌊 {session.forecast.wave_height ? `${convertWaveHeight(session.forecast.wave_height).toFixed(1)}${getWaveUnitLabel()}` : '--'} @ {session.forecast.wave_period?.toFixed(0)}s
                           {' · '}
                           💨 <span className="capitalize">{session.forecast.wind_orientation || 'N/A'}</span>
                         </div>

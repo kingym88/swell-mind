@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
+import { usePreferences } from '@/contexts/PreferencesContext';
 
 interface ForecastWindow {
   timestamp_utc: string;
@@ -24,6 +25,7 @@ interface SpotForecastSummary {
 
 export default function ForecastTimeline() {
   const router = useRouter();
+  const { convertWaveHeight, getWaveUnitLabel } = usePreferences();
   const [summaries, setSummaries] = useState<SpotForecastSummary[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -324,8 +326,8 @@ export default function ForecastTimeline() {
                   }}
                 >
                   <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'white', textAlign: 'center' }}>
-                    {Math.round(day.minWave)}-{Math.round(day.maxWave)}
-                    {day.maxWave >= 8 ? '+' : ''}
+                    {Math.round(convertWaveHeight(day.minWave))}-{Math.round(convertWaveHeight(day.maxWave))}{getWaveUnitLabel()}
+                    {convertWaveHeight(day.maxWave) >= 8 ? '+' : ''}
                   </div>
                   <div
                     style={{ 

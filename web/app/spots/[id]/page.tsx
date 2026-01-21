@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { api } from '@/lib/api';
 import { format } from 'date-fns';
 import Link from 'next/link';
+import { usePreferences } from '@/contexts/PreferencesContext';
 
 interface ForecastWindow {
   timestamp_utc: string;
@@ -29,6 +30,7 @@ export default function SpotDetailPage() {
   const router = useRouter();
   const params = useParams();
   const spotId = params?.id as string;
+  const { convertWaveHeight, convertWindSpeed, getWaveUnitLabel, getWindUnitLabel } = usePreferences();
 
   const [spot, setSpot] = useState<Spot | null>(null);
   const [windows, setWindows] = useState<ForecastWindow[]>([]);
@@ -205,7 +207,7 @@ export default function SpotDetailPage() {
                   <div className="bg-white/10 rounded-lg p-3">
                     <div className="text-2xl mb-1">🌊</div>
                     <div className="text-white font-bold">
-                      {window.wave_height?.toFixed(1)}m
+                      {window.wave_height ? `${convertWaveHeight(window.wave_height).toFixed(1)}${getWaveUnitLabel()}` : '--'}
                     </div>
                     <div className="text-white/60 text-xs">
                       @ {window.wave_period?.toFixed(0)}s
@@ -217,7 +219,7 @@ export default function SpotDetailPage() {
                       {window.wind_orientation || 'N/A'}
                     </div>
                     <div className="text-white/60 text-xs">
-                      {window.wind_speed ? `${(window.wind_speed * 3.6).toFixed(0)} km/h` : 'N/A'}
+                      {window.wind_speed ? `${convertWindSpeed(window.wind_speed * 3.6).toFixed(0)} ${getWindUnitLabel()}` : 'N/A'}
                     </div>
                   </div>
                   <div className="bg-white/10 rounded-lg p-3">
