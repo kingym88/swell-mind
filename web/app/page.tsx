@@ -6,9 +6,11 @@ import { api } from '@/lib/api';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import ForecastTimeline from '@/components/ForecastTimeline';
+import { usePreferences } from '@/contexts/PreferencesContext';
 
 export default function HomePage() {
   const router = useRouter();
+  const { convertWaveHeight, convertWindSpeed, getWaveUnitLabel, getWindUnitLabel } = usePreferences();
   const [user, setUser] = useState<any>(null);
   const [spots, setSpots] = useState<any[]>([]);
   const [selectedSpot, setSelectedSpot] = useState<any>(null);
@@ -193,13 +195,17 @@ export default function HomePage() {
               <div className="conditions-grid">
                 <div className="condition">
                   <div className="condition-icon">🌊</div>
-                  <div className="condition-value">{bestWindow.wave_height?.toFixed(1) || '--'}m @ {bestWindow.wave_period?.toFixed(0) || '--'}s</div>
+                  <div className="condition-value">
+                    {bestWindow.wave_height ? `${convertWaveHeight(bestWindow.wave_height).toFixed(1)}${getWaveUnitLabel()}` : '--'} @ {bestWindow.wave_period?.toFixed(0) || '--'}s
+                  </div>
                   <div className="condition-label">WNW Swell</div>
                 </div>
                 <div className="condition">
                   <div className="condition-icon">💨</div>
                   <div className="condition-value capitalize">{bestWindow.wind_orientation || 'N/A'}</div>
-                  <div className="condition-label">{bestWindow.wind_speed ? `${(bestWindow.wind_speed * 3.6).toFixed(0)} km/h` : 'N/A'}</div>
+                  <div className="condition-label">
+                    {bestWindow.wind_speed ? `${convertWindSpeed(bestWindow.wind_speed * 3.6).toFixed(0)} ${getWindUnitLabel()}` : 'N/A'}
+                  </div>
                 </div>
                 <div className="condition">
                   <div className="condition-icon">🌅</div>
@@ -287,7 +293,7 @@ export default function HomePage() {
                     {formatCompactSingleDateTime(new Date(window.timestamp_utc))}
                   </div>
                   <div className="text-xs text-gray-600">
-                    {window.wave_height?.toFixed(1)}m @ {window.wave_period?.toFixed(0)}s
+                    {window.wave_height ? `${convertWaveHeight(window.wave_height).toFixed(1)}${getWaveUnitLabel()}` : '--'} @ {window.wave_period?.toFixed(0)}s
                   </div>
                   <div className="text-xs text-gray-500 capitalize">
                     {window.wind_orientation || 'N/A'}

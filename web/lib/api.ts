@@ -58,12 +58,8 @@ class ApiClient {
   }
 
   async signout() {
-    // Just clear the token locally - no need to call backend
-    // The token will expire on its own
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('swellmind_token');
-    }
-    return { message: 'Signed out successfully' };
+    await this.request('/auth/signout', { method: 'POST' });
+    localStorage.removeItem('swellmind_token');
   }
 
   async getProfile() {
