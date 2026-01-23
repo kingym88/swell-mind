@@ -1,18 +1,22 @@
 # SwellMind - Implementation Prompt for AI Agent
 
 ## Context
+
 You are working on SwellMind, a personalized surf forecasting application built with React. The app helps surfers track sessions, get forecasts, and find the best surf windows. The frontend is deployed on Railway and uses a backend API for surf data and ML-powered recommendations.
 
 ## Your Task
-Implement the following bug fixes and feature enhancements for the SwellMind application. Reference the attached `FEATURE_UPDATES.md` file for detailed specifications.
+
+Implement the following bug fixes and feature enhancements for the SwellMind application. Reference the `swellmind_updates.md` file in the project root for detailed specifications.
 
 ---
 
 ## Implementation Requirements
 
 ### 1. Fix Initial Load Layout Flash (Issue #1)
+
 **Problem:** Elements render in wrong order for ~1 second on initial load  
 **Solution Needed:**
+
 - Implement proper loading states using skeleton screens or loading placeholders
 - Ensure CSS prevents layout shifts (use min-height, aspect-ratio, or fixed dimensions)
 - Consider using `content-visibility` CSS property for better rendering
@@ -22,6 +26,7 @@ Implement the following bug fixes and feature enhancements for the SwellMind app
 ### 2. Implement Search & Best Windows Features (Issue #2)
 
 #### A. Replace Reminder Bell with Search Icon
+
 - Remove the reminder bell icon from the header
 - Add a search icon (magnifying glass) in its place
 - Implement search modal/panel that:
@@ -33,6 +38,7 @@ Implement the following bug fixes and feature enhancements for the SwellMind app
   - Includes close/dismiss functionality
 
 #### B. Replace "Set Reminder" with "Best Windows" Button
+
 - Change button text from "Set Reminder" to "Best Windows"
 - Create new route `/best-windows` (or appropriate path in your routing structure)
 - Create new page component that:
@@ -46,6 +52,7 @@ Implement the following bug fixes and feature enhancements for the SwellMind app
 ### 3. Add "All Spots" Selection & Location Display (Issue #3)
 
 #### A. Implement "All" Toggle Button
+
 - Add "All" button as first option in spot selection row
 - Make "All" the default selected state on page load
 - When "All" is selected:
@@ -56,6 +63,7 @@ Implement the following bug fixes and feature enhancements for the SwellMind app
 - Update state management to track selected spot ("All" or specific spot)
 
 #### B. Add Location to Best Window Card
+
 - Between "NEXT BEST WINDOW" heading and date/time, add a new row:
   - Small map/pin icon (📍 or use icon library)
   - Spot name (e.g., "Bafureira")
@@ -63,8 +71,10 @@ Implement the following bug fixes and feature enhancements for the SwellMind app
 - Ensure it's visible but doesn't overpower main content
 
 ### 4. Fix Quick Stats Not Updating (Issue #4)
+
 **Problem:** Stats show 4 sessions when user has logged 6  
 **Solution Needed:**
+
 - Debug why session count isn't updating after new session creation
 - Implement proper state management or API refetch after session logging
 - Ensure the following update after each new session:
@@ -80,7 +90,9 @@ Implement the following bug fixes and feature enhancements for the SwellMind app
 - Verify data persistence across page refreshes
 
 ### 5. Update Upcoming Windows Section (Issue #5)
+
 **Requirements:**
+
 - Make Upcoming Windows reactive to spot selection from Issue #3
 - When specific spot selected: Filter to show only that spot's windows
 - When "All" selected: Show best windows across all spots
@@ -92,13 +104,15 @@ Implement the following bug fixes and feature enhancements for the SwellMind app
 ### 6. Implement Logged-Out User Experience (Issue #6)
 
 **Header Updates:**
+
 - Remove reminder bell icon for logged-out users
-- Remove settings icon for logged-out users  
+- Remove settings icon for logged-out users
 - Add "Log In" button in top-right
 - Style button prominently to encourage login
 - Connect to your authentication flow
 
 **Quick Stats Section (logged-out):**
+
 - Show generic placeholder content:
   - "Join to track sessions" message
   - Generic surf statistics
@@ -107,6 +121,7 @@ Implement the following bug fixes and feature enhancements for the SwellMind app
 - No personalized data should be visible
 
 **Upcoming Windows (logged-out):**
+
 - Display 3-4 random/featured surf spots
 - Show sample upcoming windows with realistic data
 - Include popular Portuguese surf spots (Ericeira, Peniche, etc.)
@@ -114,13 +129,16 @@ Implement the following bug fixes and feature enhancements for the SwellMind app
 - Data should be generic, not personalized
 
 **Implementation Notes:**
+
 - Add authentication state check throughout app
 - Create conditional rendering based on `isLoggedIn` or similar state
 - Ensure proper handling of protected routes
 - Consider using React context or state management for auth state
 
 ### 7. Rename "Quick Stats" to "Your Stats" (Issue #7)
+
 **Simple change:**
+
 - IF user is authenticated: Display heading as "Your Stats"
 - IF user is logged out: Display heading as "Quick Stats"
 - Implement with conditional rendering based on auth state
@@ -131,6 +149,7 @@ Implement the following bug fixes and feature enhancements for the SwellMind app
 ## Implementation Guidelines
 
 ### Code Quality
+
 - Follow existing code patterns and conventions in the project
 - Maintain mobile-first responsive design
 - Use existing component library and styling system
@@ -138,17 +157,20 @@ Implement the following bug fixes and feature enhancements for the SwellMind app
 - Implement proper error handling
 
 ### State Management
+
 - Use appropriate state management (React hooks, Context, Redux, etc.)
 - Ensure state updates are efficient and don't cause unnecessary re-renders
 - Properly handle async operations with loading and error states
 
 ### API Integration
+
 - Use existing API endpoints where possible
 - Implement proper error handling for API calls
 - Add loading indicators for async operations
 - Consider implementing caching for forecast data
 
 ### Testing Approach
+
 - Test on mobile and desktop viewports
 - Verify authentication flows work correctly
 - Test all interactive elements (buttons, toggles, search)
@@ -156,6 +178,7 @@ Implement the following bug fixes and feature enhancements for the SwellMind app
 - Check for layout shifts and performance issues
 
 ### Performance Considerations
+
 - Minimize bundle size
 - Optimize images and assets
 - Implement code splitting if needed
@@ -167,23 +190,21 @@ Implement the following bug fixes and feature enhancements for the SwellMind app
 ## Implementation Priority
 
 **Start with Phase 1 (Critical):**
+
 1. Issue #1: Fix layout flash on initial load
 2. Issue #4: Fix stats not updating after session logging
 3. Issue #7: Update stats heading based on auth state
 
-**Then Phase 2 (High Priority):**
-4. Issue #3: Add "All" toggle and location display to best window
-5. Issue #5: Make upcoming windows reactive to spot selection
-6. Issue #6: Implement complete logged-out experience
+**Then Phase 2 (High Priority):** 4. Issue #3: Add "All" toggle and location display to best window 5. Issue #5: Make upcoming windows reactive to spot selection 6. Issue #6: Implement complete logged-out experience
 
-**Finally Phase 3 (Enhancement):**
-7. Issue #2: Add search functionality and Best Windows page
+**Finally Phase 3 (Enhancement):** 7. Issue #2: Add search functionality and Best Windows page
 
 ---
 
 ## Deliverables
 
 Please provide:
+
 1. Updated code for all affected components
 2. Any new routes or pages created
 3. Updated API calls or data fetching logic

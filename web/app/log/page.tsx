@@ -57,7 +57,8 @@ export default function LogSessionPage() {
         notes: notes || undefined
       });
 
-      router.push('/sessions');
+      // Redirect to home page to trigger stats refresh
+      router.push('/');
     } catch (err: any) {
       setError(err.message || 'Failed to log session');
     } finally {
