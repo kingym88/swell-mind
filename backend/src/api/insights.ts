@@ -105,19 +105,57 @@ router.get('/me', requireAuth, async (req: Request, res: Response) => {
       ratingDistribution[s.overall_rating - 1]++;
     });
 
-    // Calculate sessions by spot
+    // Calculate sessions by spot with ratings
     const { data: spotBreakdown } = await supabase
       .from('sessions')
       .select(`
-        spot:spots(name)
+        spot:spots(id, name),
+        overall_rating
       `)
       .eq('user_id', userId);
 
     const spotCounts: Record<string, number> = {};
+    const spotRatings: Record<string, { total: number; count: number; id: string }> = {};
+    
     spotBreakdown?.forEach(s => {
       const spotName = (s.spot as any)?.name || 'Unknown';
+      const spotId = (s.spot as any)?.id || '';
+      const rating = s.overall_rating;
+      
       spotCounts[spotName] = (spotCounts[spotName] || 0) + 1;
+      
+      if (!spotRatings[spotName]) {
+        spotRatings[spotName] = { total: 0, count: 0, id: spotId };
+      }
+      spotRatings[spotName].total += rating;
+      spotRatings[spotName].count += 1;
     });
+
+    // Find best spot (highest average rating with at least 2 sessions)
+    let bestSpot: { name: string; id: string; avg_rating: number } | null = null;
+    Object.entries(spotRatings).forEach(([name, data]) => {
+      if (data.count >= 2) {
+        const avgRating = data.total / data.count;
+        if (!bestSpot || avgRating > bestSpot.avg_rating) {
+          bestSpot = { name, id: data.id, avg_rating: avgRating };
+        }
+      }
+    });
+
+    // If no spot has 2+ sessions, just use the most frequented spot
+    if (!bestSpot && Object.keys(spotCounts).length > 0) {
+      const mostFrequent = Object.entries(spotCounts)
+        .sort((a, b) => b[1] - a[1])[0];
+      if (mostFrequent) {
+        const spotName = mostFrequent[0];
+        const spotData = spotRatings[spotName];
+        bestSpot = {
+          name: spotName,
+          id: spotData?.id || '',
+          avg_rating: spotData ? spotData.total / spotData.count : 0
+        };
+      }
+    }
 
     // Get recent trend (last 30 days vs previous 30 days)
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
@@ -144,6 +182,7 @@ router.get('/me', requireAuth, async (req: Request, res: Response) => {
 
     return res.json({
       insights,
+      best_spot: bestSpot,
       model_stats: modelStats ? {
         model_type: modelStats.model_type,
         last_trained: modelStats.last_trained_at,

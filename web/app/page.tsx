@@ -44,8 +44,9 @@ export default function HomePage() {
         try {
           const insightsData = await api.getInsights();
           setInsights(insightsData);
-        } catch {
+        } catch (err) {
           // Insights might not be available yet
+          console.error('Failed to fetch insights:', err);
           setInsights(null);
         }
         
@@ -360,12 +361,12 @@ export default function HomePage() {
               <div className="stats-grid">
                 <div className="stat-card dark">
                   <div className="stat-icon">📊</div>
-                  <div className="stat-value">{insights?.stats?.total_sessions || 0}</div>
+                  <div className="stat-value">{insights?.statistics?.total_sessions || insights?.insights?.total_sessions || 0}</div>
                   <div className="stat-label">Sessions</div>
                 </div>
                 <div className="stat-card dark">
                   <div className="stat-icon">⭐</div>
-                  <div className="stat-value">{insights?.stats?.avg_rating?.toFixed(1) || '--'}</div>
+                  <div className="stat-value">{insights?.statistics?.average_rating?.toFixed(1) || insights?.insights?.avg_rating?.toFixed(1) || '--'}</div>
                   <div className="stat-label">Avg Rating</div>
                 </div>
                 <div className="stat-card dark">
@@ -375,8 +376,8 @@ export default function HomePage() {
                 </div>
                 <div className="stat-card dark">
                   <div className="stat-icon">🤖</div>
-                  <div className="stat-value text-base">
-                    {insights?.model_stats?.confidence_level || 'Learning'}
+                  <div className="stat-value text-base capitalize">
+                    {insights?.insights?.model_confidence || insights?.model_stats?.confidence || 'Learning'}
                   </div>
                   <div className="stat-label">Model Confidence</div>
                 </div>
