@@ -19,7 +19,7 @@ Make this a selectable option with the following choices:
 - Kilometers per hour (km/h)
 - Miles per hour (mph)
 - Knots (kn)
-- Meters per second (m/s)
+- Meters per second (m/s)e me
 
 When tapped, show a modal/picker to select between these units.
 
