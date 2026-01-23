@@ -53,10 +53,10 @@ export default function BestWindowsPage() {
       });
       
       const results = await Promise.all(windowsPromises);
-      const validResults = results.filter(r => r !== null && r.window);
+      const validResults = results.filter((r): r is { spot: any; window: any; score: number } => r !== null && r.window);
       
       // Sort by score descending
-      validResults.sort((a, b) => (b.score || 0) - (a.score || 0));
+      validResults.sort((a, b) => (b?.score || 0) - (a?.score || 0));
       
       setSpotWindows(validResults);
     } catch (err) {
